@@ -3,9 +3,10 @@ package fr.miage.estorymap.entity.id;
 import fr.miage.estorymap.entity.User;
 import fr.miage.estorymap.entity.Workspace;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class SharedId {
+public class SharedId implements Serializable {
 
     private Workspace workspace;
     private User user;

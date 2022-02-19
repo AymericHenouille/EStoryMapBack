@@ -1,10 +1,13 @@
 package fr.miage.estorymap.entity;
 
+import fr.miage.estorymap.entity.id.SharedId;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "shared")
+@IdClass(SharedId.class)
 public class Shared implements Serializable {
 
     @Id
