@@ -1,6 +1,7 @@
 package fr.miage.estorymap.entity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "workspace")
@@ -21,15 +22,18 @@ public class Workspace {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "workspace_user_id", referencedColumnName = "idu", nullable = false)
-    private User user;
+    private User owner;
+
+    @ManyToMany(mappedBy = "workspaces")
+    private Set<User> users;
 
     protected Workspace() {}
 
-    public Workspace(String label, String color, char emoji, User user) {
+    public Workspace(String label, String color, char emoji, User owner) {
         this.label = label;
         this.color = color;
         this.emoji = emoji;
-        this.user = user;
+        this.owner = owner;
     }
 
     public Long getIdw() {
@@ -48,8 +52,8 @@ public class Workspace {
         return emoji;
     }
 
-    public User getUser() {
-        return user;
+    public User getOwner() {
+        return owner;
     }
 
     @Override
@@ -59,7 +63,7 @@ public class Workspace {
                 ", label='" + label + '\'' +
                 ", color='" + color + '\'' +
                 ", emoji=" + emoji +
-                ", user=" + user +
+                ", owner=" + owner +
                 '}';
     }
 }

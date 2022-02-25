@@ -4,12 +4,15 @@ import fr.miage.estorymap.entity.File;
 import fr.miage.estorymap.entity.FileType;
 import fr.miage.estorymap.entity.Project;
 import fr.miage.estorymap.repository.FileRepository;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping(path = "/files")
+@RestController("/files")
+@ResponseBody
 public class FileController {
 
     @Autowired
@@ -22,38 +25,40 @@ public class FileController {
     private FileTypeController fileTypeController;
 
     @GetMapping
-    public @ResponseBody Iterable<File> getAllFiles() {
-        return fileRepository.findAll();
+    public ResponseEntity<Iterable<File>> getAllFiles() {
+        return ResponseEntity.status(HttpStatus.OK).body(fileRepository.findAll());
     }
 
-    @GetMapping(path = "/{id}")
-    public @ResponseBody File getFileById(@PathVariable Long id) {
-        return fileRepository.existsById(id) ? fileRepository.findById(id).get() : null;
+    @GetMapping("/{id}")
+    public ResponseEntity<File> getFileById(@PathVariable Long id) {
+        return fileRepository.existsById(id)
+                ? ResponseEntity.status(HttpStatus.OK).body(fileRepository.findById(id).get())
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    @PostMapping(path = "/add")
-    public @ResponseBody String addNewFile(@RequestParam String path, @RequestParam Long projectId, @RequestParam Long fileTypeId) {
-        Project project = projectController.getProjectById(projectId);
+    @PostMapping("/add")
+    public ResponseEntity<String> addNewFile(@RequestParam String path, @RequestParam Long projectId, @RequestParam Long fileTypeId) {
+        Project project = projectController.getProjectById(projectId).getBody();
         if (project == null) {
-            return String.format("Project %s doesn't exist", projectId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Project %s doesn't exist", projectId));
         }
 
-        FileType fileType = fileTypeController.getFileTypeById(fileTypeId);
+        FileType fileType = fileTypeController.getFileTypeById(fileTypeId).getBody();
         if (fileType == null) {
-            return String.format("FileType %s doesn't exist", fileTypeId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("FileType %s doesn't exist", fileTypeId));
         }
 
         File file = new File(path, project, fileType);
         fileRepository.save(file);
-        return "File successfully saved";
+        return ResponseEntity.status(HttpStatus.OK).body("File successfully saved");
     }
 
-    @DeleteMapping(path = "/{id}")
-    public @ResponseBody String deleteFile(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteFile(@PathVariable Long id) {
         if (fileRepository.existsById(id)) {
             fileRepository.deleteById(id);
-            return String.format("File %s successfully deleted", id);
+            return ResponseEntity.status(HttpStatus.OK).body(String.format("File %s successfully deleted", id));
         }
-        return String.format("File %s doesn't exist", id);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("File %s doesn't exist", id));
     }
 }

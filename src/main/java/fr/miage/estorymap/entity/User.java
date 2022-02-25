@@ -1,6 +1,7 @@
 package fr.miage.estorymap.entity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -9,7 +10,15 @@ public class User {
     @Id
     private String idu;
 
+    @Column
     private String mail;
+
+    @ManyToMany
+    @JoinTable(
+            name = "workspaces",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "workspace_id"))
+    private Set<Workspace> workspaces;
 
     protected User() {}
 

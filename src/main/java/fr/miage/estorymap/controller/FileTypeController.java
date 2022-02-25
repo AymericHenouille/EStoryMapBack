@@ -3,39 +3,43 @@ package fr.miage.estorymap.controller;
 import fr.miage.estorymap.entity.FileType;
 import fr.miage.estorymap.repository.FileTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping(path = "/file_types")
+@RestController("/file_types")
+@ResponseBody
 public class FileTypeController {
 
     @Autowired
     private FileTypeRepository fileTypeRepository;
 
     @GetMapping
-    public @ResponseBody Iterable<FileType> getAllFileTypes() {
-        return fileTypeRepository.findAll();
+    public ResponseEntity<Iterable<FileType>> getAllFileTypes() {
+        return ResponseEntity.status(HttpStatus.OK).body(fileTypeRepository.findAll());
     }
 
-    @GetMapping(path = "/{id}")
-    public @ResponseBody FileType getFileTypeById(@PathVariable Long id) {
-        return fileTypeRepository.existsById(id) ? fileTypeRepository.findById(id).get() : null;
+    @GetMapping("/{id}")
+    public ResponseEntity<FileType> getFileTypeById(@PathVariable Long id) {
+        return fileTypeRepository.existsById(id)
+                ? ResponseEntity.status(HttpStatus.OK).body(fileTypeRepository.findById(id).get())
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    @PostMapping(path = "/add")
-    public @ResponseBody String addNewFileType(@RequestParam String label) {
+    @PostMapping("/add")
+    public ResponseEntity<String> addNewFileType(@RequestParam String label) {
         FileType fileType = new FileType(label);
         fileTypeRepository.save(fileType);
-        return "FileType successfully added";
+        return ResponseEntity.status(HttpStatus.OK).body("FileType successfully added");
     }
 
-    @DeleteMapping(path = "/{id}")
-    public @ResponseBody String deleteFileType(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteFileType(@PathVariable Long id) {
         if (fileTypeRepository.existsById(id)) {
             fileTypeRepository.deleteById(id);
-            return String.format("FileType %s successfully deleted", id);
+            return ResponseEntity.status(HttpStatus.OK).body(String.format("FileType %s successfully deleted", id));
         }
-        return String.format("FileType %s doesn't exist", id);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("FileType %s doesn't exist", id));
     }
 }
