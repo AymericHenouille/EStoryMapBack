@@ -8,7 +8,7 @@ import java.util.Set;
 public class Workspace {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idw;
 
     @Column(nullable = false)
@@ -18,10 +18,10 @@ public class Workspace {
     private String color;
 
     @Column(nullable = true)
-    private char emoji;
+    private Character emoji;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "workspace_user_id", referencedColumnName = "idu", nullable = false)
+    @JoinColumn(name = "owner_id", referencedColumnName = "idu", nullable = false)
     private User owner;
 
     @ManyToMany(mappedBy = "workspaces")

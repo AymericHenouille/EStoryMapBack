@@ -9,8 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/workspaces")
-@ResponseBody
+@RestController
 public class WorkspaceController {
 
     @Autowired
@@ -19,36 +18,36 @@ public class WorkspaceController {
     @Autowired
     private UserController userController;
 
-    @GetMapping
+    @GetMapping("/workspaces")
     public ResponseEntity<Iterable<Workspace>> getAllWorkspaces() {
         return ResponseEntity.status(HttpStatus.OK).body(workspaceRepository.findAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/workspaces/{id}")
     public ResponseEntity<Workspace> getWorkspaceById(@PathVariable Long id) {
         return workspaceRepository.existsById(id)
                 ? ResponseEntity.status(HttpStatus.OK).body(workspaceRepository.findById(id).get())
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    @PostMapping("/add")
+    @PostMapping("/workspaces/add")
     public ResponseEntity<String> addNewWorkspace(@RequestParam String label, @RequestParam String color, @RequestParam char emoji, @RequestParam String userId) {
         User user = userController.getUserById(userId).getBody();
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("User %s doesn't exist", userId));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("User %s doesn't exist %n", userId));
         }
 
         Workspace workspace = new Workspace(label, color, emoji, user);
         workspaceRepository.save(workspace);
-        return ResponseEntity.status(HttpStatus.OK).body("Workspace successfully added");
+        return ResponseEntity.status(HttpStatus.OK).body(String.format("Workspace successfully added %n"));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/workspaces/{id}")
     public ResponseEntity<String> deleteWorkspace(@PathVariable Long id) {
         if (workspaceRepository.existsById(id)) {
             workspaceRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(String.format("Workspace %s successfully deleted", id));
+            return ResponseEntity.status(HttpStatus.OK).body(String.format("Workspace %s successfully deleted %n", id));
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Workspace %s doesn't exist", id));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Workspace %s doesn't exist %n", id));
     }
 }

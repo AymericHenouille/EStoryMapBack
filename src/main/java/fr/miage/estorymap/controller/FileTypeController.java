@@ -8,38 +8,37 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/file_types")
-@ResponseBody
+@RestController
 public class FileTypeController {
 
     @Autowired
     private FileTypeRepository fileTypeRepository;
 
-    @GetMapping
+    @GetMapping("/file_types")
     public ResponseEntity<Iterable<FileType>> getAllFileTypes() {
         return ResponseEntity.status(HttpStatus.OK).body(fileTypeRepository.findAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/file_types/{id}")
     public ResponseEntity<FileType> getFileTypeById(@PathVariable Long id) {
         return fileTypeRepository.existsById(id)
                 ? ResponseEntity.status(HttpStatus.OK).body(fileTypeRepository.findById(id).get())
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    @PostMapping("/add")
+    @PostMapping("/file_types/add")
     public ResponseEntity<String> addNewFileType(@RequestParam String label) {
         FileType fileType = new FileType(label);
         fileTypeRepository.save(fileType);
-        return ResponseEntity.status(HttpStatus.OK).body("FileType successfully added");
+        return ResponseEntity.status(HttpStatus.OK).body(String.format("FileType successfully added %n"));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/file_types/{id}")
     public ResponseEntity<String> deleteFileType(@PathVariable Long id) {
         if (fileTypeRepository.existsById(id)) {
             fileTypeRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(String.format("FileType %s successfully deleted", id));
+            return ResponseEntity.status(HttpStatus.OK).body(String.format("FileType %s successfully deleted %n", id));
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("FileType %s doesn't exist", id));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("FileType %s doesn't exist %n", id));
     }
 }

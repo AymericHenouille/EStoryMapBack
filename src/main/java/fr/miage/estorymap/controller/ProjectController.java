@@ -9,8 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/projects")
-@ResponseBody
+@RestController
 public class ProjectController {
 
     @Autowired
@@ -19,36 +18,36 @@ public class ProjectController {
     @Autowired
     private WorkspaceController workspaceController;
 
-    @GetMapping
+    @GetMapping("/projects")
     public ResponseEntity<Iterable<Project>> getAllProjects() {
         return ResponseEntity.status(HttpStatus.OK).body(projectRepository.findAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/projects/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable Long id) {
         return projectRepository.existsById(id)
                 ? ResponseEntity.status(HttpStatus.OK).body(projectRepository.findById(id).get())
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    @PostMapping("/add")
+    @PostMapping("/projects/add")
     public ResponseEntity<String> addNewProject(@RequestParam String label, @RequestParam String color, @RequestParam String image, @RequestParam Long workspaceId) {
         Workspace workspace = workspaceController.getWorkspaceById(workspaceId).getBody();
         if (workspace == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Workspace %s doesn't exist", workspaceId));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Workspace %s doesn't exist %n", workspaceId));
         }
 
         Project project = new Project(label, color, image, workspace);
         projectRepository.save(project);
-        return ResponseEntity.status(HttpStatus.OK).body("Project successfully added");
+        return ResponseEntity.status(HttpStatus.OK).body(String.format("Project successfully added %n"));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/projects/{id}")
     public ResponseEntity<String> deleteProject(@PathVariable Long id) {
         if (projectRepository.existsById(id)) {
             projectRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(String.format("Project %s successfully deleted", id));
+            return ResponseEntity.status(HttpStatus.OK).body(String.format("Project %s successfully deleted %n", id));
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Project %s doesn't exist", id));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Project %s doesn't exist %n", id));
     }
 }
