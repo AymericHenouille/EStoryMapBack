@@ -10,9 +10,6 @@ public class User {
     @Id
     private String idu;
 
-    @Column
-    private String mail;
-
     @ManyToMany
     @JoinTable(
             name = "workspaces",
@@ -22,24 +19,18 @@ public class User {
 
     protected User() {}
 
-    public User(String idu, String mail) {
+    public User(String idu) {
         this.idu = idu;
-        this.mail = mail;
     }
 
     public String getIdu() {
         return idu;
     }
 
-    public String getMail() {
-        return mail;
-    }
-
     @Override
     public String toString() {
         return "User{" +
                 "idu='" + idu + '\'' +
-                ", mail='" + mail + '\'' +
                 '}';
     }
 }

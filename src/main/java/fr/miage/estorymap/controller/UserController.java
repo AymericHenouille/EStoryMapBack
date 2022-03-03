@@ -1,6 +1,8 @@
 package fr.miage.estorymap.controller;
 
 import fr.miage.estorymap.entity.User;
+import fr.miage.estorymap.entity.Workspace;
+import fr.miage.estorymap.model.Shared;
 import fr.miage.estorymap.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,11 +28,11 @@ public class UserController {
     }
 
     @PostMapping("/users/add")
-    public ResponseEntity<String> addNewUser(@RequestParam String idu, @RequestParam String mail) {
+    public ResponseEntity<String> addNewUser(@RequestParam String idu) {
         if (userRepository.existsById(idu)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(String.format("User %s already exists %n", idu));
         }
-        User user = new User(idu, mail);
+        User user = new User(idu);
         userRepository.save(user);
         return ResponseEntity.status(HttpStatus.OK).body(String.format("User successfully saved %n"));
     }
@@ -42,5 +44,13 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(String.format("User %s successfully deleted %n", id));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("User %s doesn't exist %n", id));
+    }
+
+    @GetMapping("/users/{id}/shared")
+    public ResponseEntity<Iterable<Workspace>> getShared(@PathVariable String id) {
+        if (userRepository.existsById(id)) {
+            return ResponseEntity.status(HttpStatus.OK).body(userRepository.findAllSharedWorkspaceByUserId(id));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 }
