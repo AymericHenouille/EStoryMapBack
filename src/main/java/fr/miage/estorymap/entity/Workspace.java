@@ -1,7 +1,6 @@
 package fr.miage.estorymap.entity;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "workspace")
@@ -9,7 +8,7 @@ public class Workspace {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idw;
+    private Long id;
 
     @Column(nullable = false)
     private String label;
@@ -18,26 +17,18 @@ public class Workspace {
     private String color;
 
     @Column(nullable = true)
-    private Character emoji;
+    private Character emoticon;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner_id", referencedColumnName = "idu", nullable = false)
-    private User owner;
+    protected Workspace() { }
 
-    @ManyToMany(mappedBy = "workspaces")
-    private Set<User> users;
-
-    protected Workspace() {}
-
-    public Workspace(String label, String color, char emoji, User owner) {
+    public Workspace(String label, String color, char emoticon) {
         this.label = label;
         this.color = color;
-        this.emoji = emoji;
-        this.owner = owner;
+        this.emoticon = emoticon;
     }
 
-    public Long getIdw() {
-        return idw;
+    public Long getId() {
+        return id;
     }
 
     public String getLabel() {
@@ -48,22 +39,17 @@ public class Workspace {
         return color;
     }
 
-    public char getEmoji() {
-        return emoji;
-    }
-
-    public User getOwner() {
-        return owner;
+    public char getEmoticon() {
+        return emoticon;
     }
 
     @Override
     public String toString() {
         return "Workspace{" +
-                "idw=" + idw +
+                "id=" + id +
                 ", label='" + label + '\'' +
                 ", color='" + color + '\'' +
-                ", emoji=" + emoji +
-                ", owner=" + owner +
+                ", emoticon=" + emoticon +
                 '}';
     }
 }

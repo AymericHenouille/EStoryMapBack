@@ -1,13 +1,14 @@
 package fr.miage.estorymap.controller;
 
-import fr.miage.estorymap.entity.User;
 import fr.miage.estorymap.entity.Workspace;
 import fr.miage.estorymap.repository.WorkspaceRepository;
+import fr.miage.estorymap.utils.exception.WorkspaceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 public class WorkspaceController {
@@ -15,39 +16,36 @@ public class WorkspaceController {
     @Autowired
     private WorkspaceRepository workspaceRepository;
 
-    @Autowired
-    private UserController userController;
-
     @GetMapping("/workspaces")
     public ResponseEntity<Iterable<Workspace>> getAllWorkspaces() {
         return ResponseEntity.status(HttpStatus.OK).body(workspaceRepository.findAll());
     }
 
     @GetMapping("/workspaces/{id}")
-    public ResponseEntity<Workspace> getWorkspaceById(@PathVariable Long id) {
-        return workspaceRepository.existsById(id)
-                ? ResponseEntity.status(HttpStatus.OK).body(workspaceRepository.findById(id).get())
-                : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    public ResponseEntity<Workspace> getWorkspaceById(@PathVariable long id) throws WorkspaceNotFoundException {
+        final Optional<Workspace> workspace = workspaceRepository.findById(id);
+        return workspace.map(ResponseEntity::ok).orElseThrow(() -> new WorkspaceNotFoundException(id));
     }
 
-    @PostMapping("/workspaces/add")
-    public ResponseEntity<String> addNewWorkspace(@RequestParam String label, @RequestParam String color, @RequestParam char emoji, @RequestParam String userId) {
-        User user = userController.getUserById(userId).getBody();
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("User %s doesn't exist %n", userId));
-        }
+    @PostMapping("/workspaces")
+    public ResponseEntity<Workspace> addNewWorkspace(@RequestBody Workspace workspace) {
+        return ResponseEntity.ok(workspaceRepository.save(workspace));
+    }
 
-        Workspace workspace = new Workspace(label, color, emoji, user);
-        workspaceRepository.save(workspace);
-        return ResponseEntity.status(HttpStatus.OK).body(String.format("Workspace successfully added %n"));
+    @PutMapping("/workspaces")
+    public ResponseEntity<Workspace> updateWorkspace(@RequestBody Workspace workspace) throws WorkspaceNotFoundException {
+        final long id = workspace.getId();
+        final Optional<Workspace> presentWorkspace = workspaceRepository.findById(id);
+        return presentWorkspace.map((foundWorkspace) -> ResponseEntity.ok(workspaceRepository.save(workspace)))
+                .orElseThrow(() -> new WorkspaceNotFoundException(id));
     }
 
     @DeleteMapping("/workspaces/{id}")
-    public ResponseEntity<String> deleteWorkspace(@PathVariable Long id) {
-        if (workspaceRepository.existsById(id)) {
-            workspaceRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(String.format("Workspace %s successfully deleted %n", id));
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Workspace %s doesn't exist %n", id));
+    public ResponseEntity<Object> deleteWorkspace(@PathVariable Long id) throws WorkspaceNotFoundException {
+        final Optional<Workspace> workspaceToDelete = workspaceRepository.findById(id);
+        return workspaceToDelete.map((workspace) -> {
+            workspaceRepository.delete(workspace);
+            return ResponseEntity.ok().build();
+        }).orElseThrow(() -> new WorkspaceNotFoundException(id));
     }
 }
