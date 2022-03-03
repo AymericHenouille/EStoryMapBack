@@ -8,38 +8,31 @@ import java.util.Set;
 public class User {
 
     @Id
-    private String idu;
-
-    @Column
-    private String mail;
+    @Column(name = "idu")
+    private String id;
 
     @ManyToMany
     @JoinTable(
-            name = "workspaces",
+            name = "shared_workspaces",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "workspace_id"))
+            inverseJoinColumns = @JoinColumn(name = "workspace_id")
+    )
     private Set<Workspace> workspaces;
 
-    protected User() {}
+    protected User() { }
 
-    public User(String idu, String mail) {
-        this.idu = idu;
-        this.mail = mail;
+    public User(String id) {
+        this.id = id;
     }
 
-    public String getIdu() {
-        return idu;
-    }
-
-    public String getMail() {
-        return mail;
+    public String getId() {
+        return id;
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "idu='" + idu + '\'' +
-                ", mail='" + mail + '\'' +
+                "id='" + id + '\'' +
                 '}';
     }
 }
