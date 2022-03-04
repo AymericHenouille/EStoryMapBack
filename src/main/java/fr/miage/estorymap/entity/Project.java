@@ -8,7 +8,8 @@ public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idp;
+    @Column(name = "idp")
+    private Long id;
 
     @Column(nullable = false)
     private String label;
@@ -31,8 +32,8 @@ public class Project {
         this.workspace = workspace;
     }
 
-    public Long getIdp() {
-        return idp;
+    public Long getId() {
+        return id;
     }
 
     public String getLabel() {
@@ -54,7 +55,7 @@ public class Project {
     @Override
     public String toString() {
         return "Project{" +
-                "idp=" + idp +
+                "id=" + id +
                 ", label='" + label + '\'' +
                 ", color='" + color + '\'' +
                 ", image='" + image + '\'' +

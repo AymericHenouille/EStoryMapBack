@@ -4,7 +4,6 @@ import fr.miage.estorymap.entity.Workspace;
 import fr.miage.estorymap.repository.WorkspaceRepository;
 import fr.miage.estorymap.utils.exception.WorkspaceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +17,7 @@ public class WorkspaceController {
 
     @GetMapping("/workspaces")
     public ResponseEntity<Iterable<Workspace>> getAllWorkspaces() {
-        return ResponseEntity.status(HttpStatus.OK).body(workspaceRepository.findAll());
+        return ResponseEntity.ok(workspaceRepository.findAll());
     }
 
     @GetMapping("/workspaces/{id}")
@@ -28,7 +27,7 @@ public class WorkspaceController {
     }
 
     @PostMapping("/workspaces")
-    public ResponseEntity<Workspace> addNewWorkspace(@RequestBody Workspace workspace) {
+    public ResponseEntity<Workspace> createNewWorkspace(@RequestBody Workspace workspace) {
         return ResponseEntity.ok(workspaceRepository.save(workspace));
     }
 
