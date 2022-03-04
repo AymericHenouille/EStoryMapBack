@@ -1,7 +1,7 @@
 package fr.miage.estorymap.entity;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "workspace")
@@ -25,16 +25,22 @@ public class Workspace {
     @JoinColumn(name = "owner_id", referencedColumnName = "idu")
     private User owner;
 
-    @ManyToMany(mappedBy = "workspaces")
-    private Set<User> users;
+    @ManyToMany
+    @JoinTable(
+            name = "shared_workspaces",
+            joinColumns = @JoinColumn(name = "workspace_id", referencedColumnName = "idw"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "idu")
+    )
+    private List<User> users;
 
     protected Workspace() { }
 
-    public Workspace(String label, String color, char emoticon, User owner) {
+    public Workspace(String label, String color, char emoticon, User owner, List<User> users) {
         this.label = label;
         this.color = color;
         this.emoticon = emoticon;
         this.owner = owner;
+        this.users = users;
     }
 
     public Long getId() {
@@ -57,7 +63,7 @@ public class Workspace {
         return owner;
     }
 
-    public Set<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
