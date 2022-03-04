@@ -57,6 +57,10 @@ public class Workspace {
         return owner;
     }
 
+    public Set<User> getUsers() {
+        return users;
+    }
+
     @Override
     public String toString() {
         return "Workspace{" +

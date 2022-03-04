@@ -29,6 +29,10 @@ public class User {
         return id;
     }
 
+    public Set<Workspace> getWorkspaces() {
+        return workspaces;
+    }
+
     @Override
     public String toString() {
         return "User{" +
