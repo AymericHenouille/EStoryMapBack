@@ -49,7 +49,7 @@ public class UserController {
     @GetMapping("/users/{id}/shared")
     public ResponseEntity<Iterable<Workspace>> getShared(@PathVariable String id) {
         if (userRepository.existsById(id)) {
-            return ResponseEntity.status(HttpStatus.OK).body(userRepository.findAllSharedWorkspaceByUserId(Long.parseLong(id)));
+            return ResponseEntity.status(HttpStatus.OK).body(userRepository.test(id));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
