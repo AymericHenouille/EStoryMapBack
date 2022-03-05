@@ -15,7 +15,6 @@ public class ProjectController {
     @Autowired
     private ProjectRepository projectRepository;
 
-
     @GetMapping("/projects")
     public ResponseEntity<Iterable<Project>> getAllProjects() {
         return ResponseEntity.ok(projectRepository.findAll());

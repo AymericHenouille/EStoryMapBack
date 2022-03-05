@@ -19,11 +19,19 @@ public class Workspace {
     private String color;
 
     @Column()
-    private Character emoticon;
+    private String emoticon;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "owner_id", referencedColumnName = "idu")
     private User owner;
+
+    @OneToMany
+    @JoinTable(
+            name = "project_workspace",
+            joinColumns = @JoinColumn(name = "workspace_id", referencedColumnName = "idw"),
+            inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "idp")
+    )
+    private List<Project> projects;
 
     @ManyToMany
     @JoinTable(
@@ -35,11 +43,12 @@ public class Workspace {
 
     protected Workspace() { }
 
-    public Workspace(String label, String color, char emoticon, User owner, List<User> users) {
+    public Workspace(String label, String color, String emoticon, User owner, List<Project> projects, List<User> users) {
         this.label = label;
         this.color = color;
         this.emoticon = emoticon;
         this.owner = owner;
+        this.projects = projects;
         this.users = users;
     }
 
@@ -55,12 +64,16 @@ public class Workspace {
         return color;
     }
 
-    public char getEmoticon() {
+    public String getEmoticon() {
         return emoticon;
     }
 
     public User getOwner() {
         return owner;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
     }
 
     public List<User> getUsers() {
@@ -73,7 +86,10 @@ public class Workspace {
                 "id=" + id +
                 ", label='" + label + '\'' +
                 ", color='" + color + '\'' +
-                ", emoticon=" + emoticon +
+                ", emoticon='" + emoticon + '\'' +
+                ", owner=" + owner +
+                ", projects=" + projects +
+                ", users=" + users +
                 '}';
     }
 }

@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Project {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idp")
     private Long id;
 
@@ -17,19 +17,18 @@ public class Project {
     @Column(length = 7)
     private String color;
 
-    private String image;
+    @Column()
+    private String emoticon;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "project_workspace_id", referencedColumnName = "idw", nullable = false)
-    private Workspace workspace;
+    @Column()
+    private String cover;
 
-    protected Project() {}
+    protected Project() { }
 
-    public Project(String label, String color, String image, Workspace workspace) {
+    public Project(String label, String color, String emoticon) {
         this.label = label;
         this.color = color;
-        this.image = image;
-        this.workspace = workspace;
+        this.emoticon = emoticon;
     }
 
     public Long getId() {
@@ -44,12 +43,8 @@ public class Project {
         return color;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public Workspace getWorkspace() {
-        return workspace;
+    public String getEmoticon() {
+        return emoticon;
     }
 
     @Override
@@ -58,8 +53,7 @@ public class Project {
                 "id=" + id +
                 ", label='" + label + '\'' +
                 ", color='" + color + '\'' +
-                ", image='" + image + '\'' +
-                ", workspace=" + workspace +
+                ", emoticon='" + emoticon + '\'' +
                 '}';
     }
 }
