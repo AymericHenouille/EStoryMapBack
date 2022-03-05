@@ -4,6 +4,7 @@ import fr.miage.estorymap.entity.User;
 import fr.miage.estorymap.entity.Workspace;
 import fr.miage.estorymap.model.Shared;
 import fr.miage.estorymap.repository.UserRepository;
+import fr.miage.estorymap.repository.WorkspaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private WorkspaceRepository workspaceRepository;
 
     @GetMapping("/users")
     public ResponseEntity<Iterable<User>> getAllUsers() {
@@ -49,7 +53,8 @@ public class UserController {
     @GetMapping("/users/{id}/shared")
     public ResponseEntity<Iterable<Workspace>> getShared(@PathVariable String id) {
         if (userRepository.existsById(id)) {
-            return ResponseEntity.status(HttpStatus.OK).body(userRepository.test(id));
+            Iterable<Long> sharedWorkspacesId = userRepository.findSharedWorkspacesIdByUserId(id);
+            return ResponseEntity.status(HttpStatus.OK).body(workspaceRepository.findWorkspacesByIds(sharedWorkspacesId));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
