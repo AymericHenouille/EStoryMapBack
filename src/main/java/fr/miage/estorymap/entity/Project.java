@@ -25,10 +25,11 @@ public class Project {
 
     protected Project() { }
 
-    public Project(String label, String color, String emoticon) {
+    public Project(String label, String color, String emoticon, String cover) {
         this.label = label;
         this.color = color;
         this.emoticon = emoticon;
+        this.cover = cover;
     }
 
     public Long getId() {
@@ -47,6 +48,10 @@ public class Project {
         return emoticon;
     }
 
+    public String getCover() {
+        return cover;
+    }
+
     @Override
     public String toString() {
         return "Project{" +
@@ -54,6 +59,7 @@ public class Project {
                 ", label='" + label + '\'' +
                 ", color='" + color + '\'' +
                 ", emoticon='" + emoticon + '\'' +
+                ", cover='" + cover + '\'' +
                 '}';
     }
 }
