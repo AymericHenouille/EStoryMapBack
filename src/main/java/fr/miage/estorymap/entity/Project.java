@@ -3,7 +3,7 @@ package fr.miage.estorymap.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "project")
+@Table(name = "projects")
 public class Project {
 
     @Id

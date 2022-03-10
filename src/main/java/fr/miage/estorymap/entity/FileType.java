@@ -3,7 +3,7 @@ package fr.miage.estorymap.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "file_type")
+@Table(name = "file_types")
 public class FileType {
 
     @Id

@@ -10,10 +10,10 @@ public class User {
     @Column(name = "idu")
     private String id;
 
-    @Column(name = "name")
+    @Column
     private String name;
 
-    @Column(name = "email")
+    @Column
     private String email;
 
     protected User() { }
