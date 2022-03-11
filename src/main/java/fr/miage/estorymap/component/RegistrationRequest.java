@@ -1,17 +1,18 @@
-package fr.miage.estorymap.entity;
+package fr.miage.estorymap.component;
 
-import com.sun.istack.NotNull;
+public class RegistrationRequest {
 
-public class UserDTO {
-
-    @NotNull
     private String name;
-    @NotNull
     private String email;
-    @NotNull
     private String password;
 
-    public UserDTO() { }
+    public RegistrationRequest() { }
+
+    public RegistrationRequest(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 
     public String getName() {
         return name;
@@ -36,4 +37,5 @@ public class UserDTO {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }

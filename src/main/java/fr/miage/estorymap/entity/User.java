@@ -1,5 +1,7 @@
 package fr.miage.estorymap.entity;
 
+import fr.miage.estorymap.component.RegistrationRequest;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,8 +9,9 @@ import javax.persistence.*;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idu")
-    private String id;
+    private long id;
 
     @Column
     private String name;
@@ -18,17 +21,16 @@ public class User {
 
     protected User() { }
 
-    public User(String id) {
-        this(id, null, null);
-    }
-
-    public User(String id, String name, String email) {
-        this.id = id;
+    public User(String name, String email) {
         this.name = name;
         this.email = email;
     }
 
-    public String getId() {
+    public User(RegistrationRequest registrationRequest) {
+        this(registrationRequest.getName(), registrationRequest.getEmail());
+    }
+
+    public long getId() {
         return id;
     }
 

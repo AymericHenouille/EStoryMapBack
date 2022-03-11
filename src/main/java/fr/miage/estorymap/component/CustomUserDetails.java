@@ -1,32 +1,33 @@
 package fr.miage.estorymap.component;
 
 import fr.miage.estorymap.entity.User;
-import fr.miage.estorymap.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import fr.miage.estorymap.entity.UserSensitive;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public class CustomUserDetails implements UserDetails {
 
-    @Autowired
-    private UserRepository repository;
-
     private final User user;
+    private final UserSensitive userSensitive;
 
-    public CustomUserDetails(User user) {
+    public CustomUserDetails(User user, UserSensitive userSensitive) {
         this.user = user;
+        this.userSensitive = userSensitive;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        final SimpleGrantedAuthority authority = new SimpleGrantedAuthority("USER");
+        return Collections.singletonList(authority);
     }
 
     @Override
     public String getPassword() {
-        return repository.findUserPasswordById(user.getId());
+        return userSensitive.getPassword();
     }
 
     @Override
