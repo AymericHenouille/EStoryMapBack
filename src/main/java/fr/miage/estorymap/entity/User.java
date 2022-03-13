@@ -30,6 +30,12 @@ public class User {
         this(registrationRequest.getName(), registrationRequest.getEmail());
     }
 
+
+    public void update(User user) {
+        this.name = user.name;
+        this.email = user.email;
+    }
+
     public long getId() {
         return id;
     }
@@ -45,8 +51,8 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
-                '}';
+            "id='" + id + '\'' +
+            '}';
     }
 
 }

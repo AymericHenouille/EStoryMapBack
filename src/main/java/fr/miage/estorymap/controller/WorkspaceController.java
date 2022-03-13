@@ -1,23 +1,39 @@
 package fr.miage.estorymap.controller;
 
+import fr.miage.estorymap.entity.User;
 import fr.miage.estorymap.entity.Workspace;
+import fr.miage.estorymap.repository.UserRepository;
 import fr.miage.estorymap.repository.WorkspaceRepository;
+import fr.miage.estorymap.service.CustomUserDetailsService;
 import fr.miage.estorymap.utils.exception.WorkspaceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RestController
 public class WorkspaceController {
 
     @Autowired
+    private CustomUserDetailsService userDetailsService;
+
+    @Autowired
     private WorkspaceRepository workspaceRepository;
 
     @GetMapping("/workspaces")
-    public ResponseEntity<Iterable<Workspace>> getAllWorkspaces() {
-        return ResponseEntity.ok(workspaceRepository.findAll());
+    public ResponseEntity<Iterable<Workspace>> getAllWorkspaces(Principal principal) {
+        final Optional<User> user = userDetailsService.findUserByPrincipal(principal);
+        return user.map((foundUser) -> {
+            final List<Workspace> workspaces = StreamSupport.stream(workspaceRepository.findAllByUser(foundUser.getId()).spliterator(), false).collect(Collectors.toList());
+            workspaces.addAll(StreamSupport.stream(workspaceRepository.findAllSharedWithId(foundUser.getId()).spliterator(), false).collect(Collectors.toList()));
+            return ResponseEntity.ok((Iterable<Workspace>) workspaces);
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @GetMapping("/workspaces/{id}")
@@ -27,7 +43,9 @@ public class WorkspaceController {
     }
 
     @PostMapping("/workspaces")
-    public ResponseEntity<Workspace> createNewWorkspace(@RequestBody Workspace workspace) {
+    public ResponseEntity<Workspace> createNewWorkspace(@RequestBody Workspace workspace, Principal principal) {
+        final Optional<User> user = userDetailsService.findUserByPrincipal(principal);
+        user.ifPresent(workspace::setOwner);
         return ResponseEntity.ok(workspaceRepository.save(workspace));
     }
 

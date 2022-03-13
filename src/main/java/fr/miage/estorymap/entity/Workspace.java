@@ -80,6 +80,34 @@ public class Workspace {
         return users;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setEmoticon(String emoticon) {
+        this.emoticon = emoticon;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
     @Override
     public String toString() {
         return "Workspace{" +

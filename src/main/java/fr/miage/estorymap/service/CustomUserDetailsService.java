@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @Service
@@ -30,6 +31,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user.isPresent() && userSensitive.isPresent())
             return new CustomUserDetails(user.get(), userSensitive.get());
         throw new UsernameNotFoundException(String.format("User %s not found", username));
+    }
+
+    public Optional<User> findUserByPrincipal(Principal principal) {
+        final String username = principal.getName();
+        return userRepository.findByEmail(username);
     }
 
     public User signupUser(User user, UserSensitive userSensitive) {
