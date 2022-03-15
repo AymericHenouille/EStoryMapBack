@@ -1,5 +1,6 @@
-package fr.miage.estorymap.utils;
+package fr.miage.estorymap.service;
 
+import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -10,19 +11,16 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
+@Service
 public class MFCXMLReader {
 
-    private String filename;
+    public MFCXMLReader() {
 
-    public MFCXMLReader(String filename) {
-        this.filename = filename;
     }
 
-    public List<String> getAllFluxName() {
+    public List<String> getAllFluxName(String filename) {
         ArrayList<String> fluxName = new ArrayList<>();
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -31,7 +29,7 @@ public class MFCXMLReader {
             dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new File(this.filename));
+            Document doc = db.parse(new File(filename));
 
             doc.getDocumentElement().normalize();
 
@@ -58,7 +56,7 @@ public class MFCXMLReader {
         return fluxName;
     }
 
-    public List<String> getAllFluxAttribute() {
+    public List<String> getAllFluxAttribute(String filename) {
         ArrayList<String> fluxAttribute = new ArrayList<>();
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -67,7 +65,7 @@ public class MFCXMLReader {
             dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new File(this.filename));
+            Document doc = db.parse(new File(filename));
 
             doc.getDocumentElement().normalize();
 
@@ -95,9 +93,9 @@ public class MFCXMLReader {
     }
 
     public static void main(String[] args) {
-        MFCXMLReader mxr = new MFCXMLReader("src/main/resources/MFC.drawio.xml");
-        System.out.println(mxr.getAllFluxName());
-        System.out.println(mxr.getAllFluxAttribute());
+        MFCXMLReader mxr = new MFCXMLReader();
+        System.out.println(mxr.getAllFluxName("src/main/resources/MFC.drawio.xml"));
+        System.out.println(mxr.getAllFluxAttribute("src/main/resources/MFC.drawio.xml"));
     }
 
 }

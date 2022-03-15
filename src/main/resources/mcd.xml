@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<work>
+	<about>
+		<version num="0.5"/>
+		<author>
+			<name>MESSOUCI</name>
+			<email>jmerise@jfreesoft.com</email>
+		</author>
+	</about>
+<MCD>
+	<entitiesList>
+		<entite name="Projet" x="13" y="90">
+			<attribut name ="idp" type="Auto_increment" size1="" size2="" key="PRIMARY KEY" isnull="false" comment=""/>
+			<attribut name ="label" type="Varchar" size1="50" size2="" key="" isnull="false" comment=""/>
+			<attribut name ="color" type="Varchar" size1="7" size2="" key="" isnull="false" comment=""/>
+			<attribut name ="image" type="Varchar" size1="255" size2="" key="" isnull="false" comment=""/>
+
+		</entite>
+
+		<entite name="Workspace" x="434" y="85">
+			<attribut name ="idw" type="Auto_increment" size1="" size2="" key="PRIMARY KEY" isnull="false" comment=""/>
+			<attribut name ="label" type="Varchar" size1="50" size2="" key="" isnull="false" comment=""/>
+			<attribut name ="color" type="Varchar" size1="7" size2="" key="" isnull="false" comment=""/>
+			<attribut name ="emoji" type="Char" size1="1" size2="" key="" isnull="false" comment=""/>
+
+		</entite>
+
+		<entite name="Utilisateur" x="451" y="361">
+			<attribut name ="idu" type="Varchar" size1="50" size2="" key="PRIMARY KEY" isnull="false" comment=""/>
+			<attribut name ="mail" type="Varchar" size1="50" size2="" key="" isnull="false" comment=""/>
+			<attribut name ="name" type="Varchar" size1="50" size2="" key="" isnull="false" comment=""/>
+
+		</entite>
+
+		<relation name="est proprietaire" x="348" y="263">
+
+		</relation>
+
+		<relation name="contient" x="283" y="123">
+
+		</relation>
+
+		<relation name="est partage" x="571" y="263">
+
+		</relation>
+
+		<entite name="Fichier" x="16" y="353">
+			<attribut name ="idf" type="Auto_increment" size1="" size2="" key="PRIMARY KEY" isnull="false" comment=""/>
+			<attribut name ="path" type="Varchar" size1="255" size2="" key="" isnull="false" comment=""/>
+
+		</entite>
+
+		<relation name="traite" x="75" y="258">
+
+		</relation>
+
+		<entite name="TypeFichier" x="15" y="555">
+			<attribut name ="idtf" type="Auto_increment" size1="" size2="" key="PRIMARY KEY" isnull="false" comment=""/>
+			<attribut name ="label" type="Varchar" size1="5" size2="" key="" isnull="false" comment=""/>
+
+		</entite>
+
+		<relation name="est de type" x="57" y="474">
+
+		</relation>
+
+	</entitiesList>
+	<LinkList>
+		<link name="" card="0,n" elem1="Utilisateur" elem2="est proprietaire" casse="false" x="524.0" y="341.0" />
+		<link name="" card="1,1" elem1="Workspace" elem2="est proprietaire" casse="false" x="523.0" y="210.0" />
+		<link name="" card="0,n" elem1="Workspace" elem2="contient" casse="false" x="431.0" y="149.0" />
+		<link name="" card="1,1" elem1="Projet" elem2="contient" casse="false" x="236.0" y="156.0" />
+		<link name="" card="0,n" elem1="Utilisateur" elem2="est partage" casse="false" x="580.0" y="339.0" />
+		<link name="" card="0,n" elem1="Workspace" elem2="est partage" casse="false" x="580.0" y="212.0" />
+		<link name="" card="1,1" elem1="Fichier" elem2="traite" casse="false" x="111.0" y="332.0" />
+		<link name="" card="0,n" elem1="Projet" elem2="traite" casse="false" x="110.0" y="208.0" />
+		<link name="" card="0,n" elem1="TypeFichier" elem2="est de type" casse="false" x="114.0" y="537.0" />
+		<link name="" card="1,1" elem1="Fichier" elem2="est de type" casse="false" x="114.0" y="436.0" />
+	</LinkList>
+	<heritageList>
+	</heritageList>
+</MCD>
+</work>
