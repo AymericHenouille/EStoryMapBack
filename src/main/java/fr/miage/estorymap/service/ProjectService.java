@@ -36,6 +36,11 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
+    public Workspace findProjectWorkspace(Project project) throws WorkspaceNotFoundException {
+        return workspaceService.findWorkspaceByProject(project)
+                .orElseThrow(() -> new WorkspaceNotFoundException(project.getId()));
+    }
+
     public Project findUserProjects(Principal principal, long id) throws ProjectNotFoundException {
         final List<Project> projects = (List<Project>) findUserProjects(principal);
         return projects.stream().filter(project -> project.getId() == id).findFirst().orElseThrow(() -> new ProjectNotFoundException(id));

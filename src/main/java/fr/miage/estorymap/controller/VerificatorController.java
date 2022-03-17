@@ -1,5 +1,6 @@
 package fr.miage.estorymap.controller;
 
+import fr.miage.estorymap.component.Response;
 import fr.miage.estorymap.entity.Project;
 import fr.miage.estorymap.service.ProjectService;
 import fr.miage.estorymap.service.Verificator;
@@ -23,8 +24,7 @@ public class VerificatorController {
     private ProjectService projectService;
 
     @GetMapping("/project/{id}/verify")
-    public ResponseEntity<String> verify(@PathVariable long id, Principal principal) throws ProjectNotFoundException, FileNotFoundException {
-        System.out.println("Verify");
+    public ResponseEntity<Response> verify(@PathVariable long id, Principal principal) throws ProjectNotFoundException, FileNotFoundException {
         final Project project = projectService.findProjectByIdForUser(principal, id);
 
         if (project.getBpmnName() == null) throw new FileNotFoundException(id, "BPMN");
