@@ -1,6 +1,7 @@
 package fr.miage.estorymap.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "projects")
@@ -9,7 +10,7 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idp")
-    private Long id;
+    private long id;
 
     @Column(nullable = false)
     private String label;
@@ -32,7 +33,7 @@ public class Project {
         this.cover = cover;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
@@ -50,6 +51,39 @@ public class Project {
 
     public String getCover() {
         return cover;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setEmoticon(String emoticon) {
+        this.emoticon = emoticon;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return id == project.id && Objects.equals(label, project.label) && Objects.equals(color, project.color) && Objects.equals(emoticon, project.emoticon) && Objects.equals(cover, project.cover);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, label, color, emoticon, cover);
     }
 
     @Override
