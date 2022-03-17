@@ -40,7 +40,7 @@ public class ProjectImageController {
     public ResponseEntity<Resource> serveFile(Principal principal, @PathVariable long id) throws ProjectNotFoundException, MalformedURLException {
         final Project project = projectRepository.findById(id).orElseThrow(() -> new ProjectNotFoundException(id));
         final Path path = project.getCover() != null
-            ? Paths.get(PROJECT_IMAGE_PATH + "/" + id).resolve(project.getCover())
+            ? Paths.get(PROJECT_IMAGE_PATH + "/" + id).resolve("cover-" + project.getCover())
             : Paths.get(URI.create(Objects.requireNonNull(getClass().getClassLoader().getResource("default.jpg")).toString()));
         final Resource file = new UrlResource(path.toUri());
         final HttpHeaders headers = new HttpHeaders();
@@ -50,7 +50,7 @@ public class ProjectImageController {
 
     @PostMapping("/projects/{id}/cover")
     public @ResponseBody ResponseEntity<Project> uploadImage(Principal principal, @PathVariable long id, @RequestParam("file") MultipartFile file) throws IOException, ProjectNotFoundException {
-        final Path dest = Path.of(PROJECT_IMAGE_PATH + "/" + id + "/" + file.getOriginalFilename());
+        final Path dest = Path.of(PROJECT_IMAGE_PATH + "/" + id + "/cover-" + file.getOriginalFilename());
         Files.createDirectories(dest.getParent());
         final Project project = projectService.findProjectByIdForUser(principal, id);
         file.transferTo(dest.toAbsolutePath());
