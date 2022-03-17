@@ -25,10 +25,7 @@ import java.util.Objects;
 @RestController
 public class ProjectImageController {
 
-    private static final String PROJECT_IMAGE_PATH = "projects/";
-
-    @Autowired
-    private WorkspaceService workspaceService;
+    private static final String PROJECT_IMAGE_PATH = "projects";
 
     @Autowired
     private ProjectService projectService;
@@ -37,7 +34,7 @@ public class ProjectImageController {
     private ProjectRepository projectRepository;
 
     @GetMapping("/projects/{id}/cover")
-    public ResponseEntity<Resource> serveFile(Principal principal, @PathVariable long id) throws ProjectNotFoundException, MalformedURLException {
+    public ResponseEntity<Resource> serveFile(@PathVariable long id) throws ProjectNotFoundException, MalformedURLException {
         final Project project = projectRepository.findById(id).orElseThrow(() -> new ProjectNotFoundException(id));
         final Path path = project.getCover() != null
             ? Paths.get(PROJECT_IMAGE_PATH + "/" + id).resolve("cover-" + project.getCover())

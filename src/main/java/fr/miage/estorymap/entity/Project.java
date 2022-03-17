@@ -24,13 +24,25 @@ public class Project {
     @Column()
     private String cover;
 
+    @Column()
+    private String bpmnName;
+
+    @Column
+    private String mfcName;
+
+    @Column
+    private String mcdName;
+
     protected Project() { }
 
-    public Project(String label, String color, String emoticon, String cover) {
+    public Project(String label, String color, String emoticon, String cover, String bpmnName, String mfcName, String mcdName) {
         this.label = label;
         this.color = color;
         this.emoticon = emoticon;
         this.cover = cover;
+        this.bpmnName = bpmnName;
+        this.mfcName = mfcName;
+        this.mcdName = mcdName;
     }
 
     public long getId() {
@@ -53,6 +65,18 @@ public class Project {
         return cover;
     }
 
+    public String getBpmnName() {
+        return bpmnName;
+    }
+
+    public String getMfcName() {
+        return mfcName;
+    }
+
+    public String getMcdName() {
+        return mcdName;
+    }
+
     public void setId(long id) {
         this.id = id;
     }
@@ -71,6 +95,18 @@ public class Project {
 
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    public void setBpmnName(String bpmnName) {
+        this.bpmnName = bpmnName;
+    }
+
+    public void setMfcName(String mfcName) {
+        this.mfcName = mfcName;
+    }
+
+    public void setMcdName(String mcdName) {
+        this.mcdName = mcdName;
     }
 
     @Override
