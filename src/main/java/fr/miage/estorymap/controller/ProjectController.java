@@ -26,7 +26,7 @@ public class ProjectController {
     }
 
     @GetMapping("/projects/{id}")
-    public ResponseEntity<Iterable<Project>> getProjectById(Principal principal, @PathVariable Long id) throws ProjectNotFoundException {
+    public ResponseEntity<Project> getProjectById(Principal principal, @PathVariable Long id) throws ProjectNotFoundException {
         return ResponseEntity.ok(projectService.findUserProjects(principal, id));
     }
 

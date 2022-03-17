@@ -45,8 +45,7 @@ public class ProjectFileController {
     }
 
     @PostMapping("/projects/{id}/bpmn")
-    public @ResponseBody
-    ResponseEntity<Project> uploadBpmn(Principal principal, @PathVariable long id, @RequestParam("file") MultipartFile file) throws IOException, ProjectNotFoundException {
+    public @ResponseBody ResponseEntity<Project> uploadBpmn(Principal principal, @PathVariable long id, @RequestParam("file") MultipartFile file) throws IOException, ProjectNotFoundException {
         final Path dest = Path.of(PROJECT_FILE_PATH + "/" + id + "/bpmn-" + file.getOriginalFilename());
         Files.createDirectories(dest.getParent());
         final Project project = projectService.findProjectByIdForUser(principal, id);
