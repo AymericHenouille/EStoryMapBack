@@ -48,4 +48,11 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.updateProject(principal, id, project));
     }
 
+    @DeleteMapping("/projects/{id}")
+    public ResponseEntity<Void> deleteProject(Principal principal, @PathVariable Long id) throws ProjectNotFoundException {
+        final Project project = projectService.findUserProjects(principal, id);
+        projectService.deleteProject(project);
+        return ResponseEntity.ok().build();
+    }
+
 }

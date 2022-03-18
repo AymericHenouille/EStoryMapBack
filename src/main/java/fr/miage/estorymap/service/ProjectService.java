@@ -74,6 +74,10 @@ public class ProjectService {
         throw new WorkspaceNotFoundException(workspaceId);
     }
 
+    public void deleteProject(Project project) {
+        projectRepository.delete(project);
+    }
+
     public Project findProjectByIdForUser(Principal principal, long id) throws ProjectNotFoundException {
         final Optional<Project> project = projectRepository.findById(id);
         final Optional<User> user = userService.findUserByPrincipal(principal);
