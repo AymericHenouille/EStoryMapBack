@@ -36,15 +36,14 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
-    public Iterable<Project> findUserProjects(Principal principal, long workspaceId) throws ProjectNotFoundException {
-        final Optional<Workspace> workspace = workspaceService.findWorkspaceById(workspaceId);
-        final Optional<User> user = userService.findUserByPrincipal(principal);
-        if (user.isPresent() && workspace.isPresent()) {
-            if (workspaceService.userCanAccessToWorkspace(user.get(), workspace.get())) {
-                return workspace.get().getProjects();
-            }
-        }
-        throw new ProjectNotFoundException(workspaceId);
+    public Workspace findProjectWorkspace(Project project) throws WorkspaceNotFoundException {
+        return workspaceService.findWorkspaceByProject(project)
+                .orElseThrow(() -> new WorkspaceNotFoundException(project.getId()));
+    }
+
+    public Project findUserProjects(Principal principal, long id) throws ProjectNotFoundException {
+        final List<Project> projects = (List<Project>) findUserProjects(principal);
+        return projects.stream().filter(project -> project.getId() == id).findFirst().orElseThrow(() -> new ProjectNotFoundException(id));
     }
 
     public Project createProject(Principal principal, long workspaceId, Project project) throws WorkspaceNotFoundException {
@@ -73,6 +72,10 @@ public class ProjectService {
             }
         }
         throw new WorkspaceNotFoundException(workspaceId);
+    }
+
+    public void deleteProject(Project project) {
+        projectRepository.delete(project);
     }
 
     public Project findProjectByIdForUser(Principal principal, long id) throws ProjectNotFoundException {

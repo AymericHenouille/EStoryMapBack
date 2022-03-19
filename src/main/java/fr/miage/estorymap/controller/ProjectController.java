@@ -1,6 +1,7 @@
 package fr.miage.estorymap.controller;
 
 import fr.miage.estorymap.entity.Project;
+import fr.miage.estorymap.entity.Workspace;
 import fr.miage.estorymap.repository.ProjectRepository;
 import fr.miage.estorymap.service.ProjectService;
 import fr.miage.estorymap.utils.exception.ProjectNotFoundException;
@@ -26,8 +27,15 @@ public class ProjectController {
     }
 
     @GetMapping("/projects/{id}")
-    public ResponseEntity<Iterable<Project>> getProjectById(Principal principal, @PathVariable Long id) throws ProjectNotFoundException {
+    public ResponseEntity<Project> getProjectById(Principal principal, @PathVariable Long id) throws ProjectNotFoundException {
         return ResponseEntity.ok(projectService.findUserProjects(principal, id));
+    }
+
+    @GetMapping("/projects/{id}/workspace")
+    public ResponseEntity<Workspace> getProjectWorkspace(Principal principal, @PathVariable Long id) throws ProjectNotFoundException, WorkspaceNotFoundException {
+        final Project project = projectService.findUserProjects(principal, id);
+        final Workspace workspace = projectService.findProjectWorkspace(project);
+        return ResponseEntity.ok(workspace);
     }
 
     @PostMapping("/projects/{id}")
@@ -38,6 +46,13 @@ public class ProjectController {
     @PutMapping("/projects/{id}")
     public ResponseEntity<Project> updateProject(Principal principal, @PathVariable Long id, @RequestBody Project project) throws ProjectNotFoundException, WorkspaceNotFoundException {
         return ResponseEntity.ok(projectService.updateProject(principal, id, project));
+    }
+
+    @DeleteMapping("/projects/{id}")
+    public ResponseEntity<Void> deleteProject(Principal principal, @PathVariable Long id) throws ProjectNotFoundException {
+        final Project project = projectService.findUserProjects(principal, id);
+        projectService.deleteProject(project);
+        return ResponseEntity.ok().build();
     }
 
 }

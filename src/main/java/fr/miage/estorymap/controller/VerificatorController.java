@@ -9,7 +9,7 @@ import fr.miage.estorymap.utils.exception.ProjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -24,7 +24,7 @@ public class VerificatorController {
     private ProjectService projectService;
 
     @GetMapping("/project/{id}/verify")
-    public ResponseEntity<Response> verify(@RequestParam long id, Principal principal) throws ProjectNotFoundException, FileNotFoundException {
+    public ResponseEntity<Response> verify(@PathVariable long id, Principal principal) throws ProjectNotFoundException, FileNotFoundException {
         final Project project = projectService.findProjectByIdForUser(principal, id);
 
         if (project.getBpmnName() == null) throw new FileNotFoundException(id, "BPMN");

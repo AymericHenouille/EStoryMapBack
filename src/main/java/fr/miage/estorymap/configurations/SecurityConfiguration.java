@@ -28,8 +28,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .httpBasic()
                 .and()
             .authorizeRequests()
-                .antMatchers("/registration", "/user").permitAll()
-                .antMatchers("/project/**/cover").permitAll()
+                .antMatchers("/registration").permitAll()
+                .antMatchers("/projects/**/cover").permitAll()
             .anyRequest().authenticated();
     }
 
