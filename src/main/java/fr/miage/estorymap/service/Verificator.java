@@ -34,10 +34,10 @@ public class Verificator {
         final double totalRelation = bpmnFluxName.size() + mcdAttribut.size() + mfcFluxName.size() + mfcAttribut.size();
         double nbError = 0;
 
-        nbError += compare(mfcFluxName, "MFC", bpmnFluxName, "BPMN", messages);
-        nbError += compare(mfcAttribut, "MFC", mcdAttribut, "MCD", messages);
-        nbError += compare(bpmnFluxName, "BPMN", mfcFluxName, "MFC", messages);
-        nbError += compare(mcdAttribut, "MCD", mfcAttribut, "MFC", messages);
+        nbError += compare("Le flux", mfcFluxName, "MFC", bpmnFluxName, "BPMN", messages);
+        nbError += compare("L'attribut", mfcAttribut, "MFC", mcdAttribut, "MCD", messages);
+        nbError += compare("Le flux", bpmnFluxName, "BPMN", mfcFluxName, "MFC", messages);
+        nbError += compare("L'attribut", mcdAttribut, "MCD", mfcAttribut, "MFC", messages);
 
         if (messages.isEmpty()) {
             messages.add("Aucune erreur trouvée dans le projet.");
@@ -51,12 +51,12 @@ public class Verificator {
         return new Response(messages, percent);
     }
 
-    private int compare(List<String> primary, String primaryName, List<String> secondary, String secondaryName, List<String> messages) {
+    private int compare(String type, List<String> primary, String primaryName, List<String> secondary, String secondaryName, List<String> messages) {
         int nbError = 0;
 
         for (String s : primary) {
             if (!secondary.contains(s)) {
-                messages.add(String.format("%s présent dans le %s mais pas dans le %s.", s, primaryName, secondaryName));
+                messages.add(String.format("%s '%s' est présent dans le %s mais pas dans le %s.", type, s, primaryName, secondaryName));
                 nbError ++;
             }
         }
@@ -70,6 +70,9 @@ public class Verificator {
         final String mfcPath = "src/main/resources/MFC.drawio.xml";
         final String mcdPath = "src/main/resources/mcd.xml";
 
-        System.out.println(verificator.verify(bpmnPath, mfcPath, mcdPath));
+        Response response = verificator.verify(bpmnPath, mfcPath, mcdPath);
+        for (String s : response.getMessages()) {
+            System.out.println(s);
+        }
     }
 }
